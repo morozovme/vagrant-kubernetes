@@ -6,7 +6,8 @@ NODEIP=$1
 
 #run this dude with sudo
 
-sudo ip route del default via 10.0.2.2
+sudo ip route del default via 192.168.121.1
+#sudo ip route del default via 10.0.2.2
 sudo ip route add default via 192.168.1.1
 
 #sudo echo "UseRoutes=false" >> /run/systemd/network/10-netplan-eth0.network
