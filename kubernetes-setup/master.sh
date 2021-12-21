@@ -5,6 +5,7 @@ set -e
 NODEIP=$1
 
 sudo ip route del default via 192.168.121.1
+#sudo ip route del default via 10.0.2.2
 sudo ip route add default via 192.168.1.1
 
 #sudo echo "UseRoutes=false" >> /run/systemd/network/10-netplan-eth0.network
@@ -217,7 +218,7 @@ sudo kubeadm config images pull
 
 sudo echo "KUBELET_EXTRA_ARGS=--node-ip=$NODEIP" >> /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 
-sudo kubeadm init --apiserver-advertise-address="$NODEIP" --apiserver-cert-extra-sans="192.168.1.170"  --node-name k8s-master.home --pod-network-cidr=172.16.0.0/16 --control-plane-endpoint=k8s-master.home
+sudo kubeadm init --apiserver-advertise-address="$NODEIP" --apiserver-cert-extra-sans="192.168.1.170"  --node-name k8s-master.home --pod-network-cidr=10.244.0.0/16 --control-plane-endpoint=k8s-master.home
 sudo kubeadm token create --print-join-command >> /tmp/join-command.sh
 
 
