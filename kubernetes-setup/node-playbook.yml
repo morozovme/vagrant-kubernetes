@@ -1,0 +1,147 @@
+---
+- hosts: all
+  become: true
+  tasks:
+
+  - name: change default route
+    command: route add default gw 192.168.1.1 eth1
+
+  - name: delete vagrant default route
+    command: route del default gw 10.0.2.2 eth0
+
+  - name: add k8s-master to /etc/hosts
+    lineinfile:
+      path: /etc/hosts
+      line: 192.168.1.170 k8s-master
+
+  - name: add node-1 to /etc/hosts
+    lineinfile:
+      path: /etc/hosts
+      line: 192.168.1.171 node-1
+
+  - name: add node-2 to /etc/hosts
+    lineinfile:
+      path: /etc/hosts
+      line: 192.168.1.172 node-2
+
+  - name: Install packages that allow apt to be used over HTTPS
+    apt:
+      name: "{{ packages }}"
+      state: present
+      update_cache: yes
+    vars:
+      packages:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg-agent
+      - software-properties-common
+
+  - name: Add an apt signing key for Docker
+    apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+
+  - name: Add apt repository for stable version
+    apt_repository:
+      repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+      state: present
+
+  - name: Install docker and its dependecies
+    apt: 
+      name: "{{ packages }}"
+      state: present
+      update_cache: yes
+    vars:
+      packages:
+#      - docker-ce 
+#      - docker-ce-cli 
+      - containerd.io
+#    notify:
+#      - docker status
+
+  - name: install docker-cli
+    apt: deb="https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/amd64/docker-ce-cli_18.09.0~3-0~ubuntu-xenial_amd64.deb"
+    sudo: true
+
+  - name: install docker-ce
+    apt: deb="https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/amd64/docker-ce_18.09.0~3-0~ubuntu-xenial_amd64.deb"
+    sudo: true
+
+#  - name: install containerd
+#    apt: deb="https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/amd64/containerd.io_1.2.0-1_amd64.deb"
+#    sudo: true
+
+
+
+  - name: Add vagrant user to docker group
+    user:
+      name: vagrant
+      group: docker
+
+
+  - name: Remove swapfile from /etc/fstab
+    mount:
+      name: "{{ item }}"
+      fstype: swap
+      state: absent
+    with_items:
+      - swap
+      - none
+
+  - name: Disable swap
+    command: swapoff -a
+    when: ansible_swaptotal_mb > 0
+
+#  - name: change docker config              # for some reason changes to cgroups again
+#    copy:
+#      src: "{{ playbook_dir }}/files/daemon.json"
+#      dest: /etc/docker/daemon.json
+
+  - name: Add an apt signing key for Kubernetes
+    apt_key:
+      url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+      state: present
+
+  - name: Adding apt repository for Kubernetes
+    apt_repository:
+      repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+      state: present
+      filename: kubernetes.list
+
+  - name: Install Kubernetes binaries
+    apt: 
+      name: "{{ packages }}"
+      state: present
+      update_cache: yes
+    vars:
+      packages:
+        - kubelet 
+        - kubeadm 
+        - kubectl
+
+  - name: Configure node ip
+    lineinfile:
+      path: /usr/bin/kubelet
+      line: KUBELET_EXTRA_ARGS=--node-ip={{ node_ip }}
+
+  - name: Restart kubelet
+    service:
+      name: kubelet
+      daemon_reload: yes
+      state: restarted
+
+  - name: Copy the join command to server location
+    copy: 
+#      src: ~/infrastructure_scripts/vagrant/kubernetes-vbox/kubernetes-setup/files/join-command 
+      src: "{{ playbook_dir }}/files/join-command"
+      dest: /tmp/join-command.sh 
+      mode: 0777
+      
+
+  - name: Join the node to cluster
+    command: sh /tmp/join-command.sh
+
+  handlers:
+  - name: docker status
+    service: name=docker state=started
