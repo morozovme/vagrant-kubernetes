@@ -114,6 +114,7 @@ sudo mkdir -p /etc/systemd/system/docker.service.d
 # Create daemon json config file
 sudo tee /etc/docker/daemon.json <<EOF
 {
+  "registry-mirrors": ["http://192.168.1.88:6000"],
   "exec-opts": ["native.cgroupdriver=systemd"],
   "log-driver": "json-file",
   "log-opts": {
