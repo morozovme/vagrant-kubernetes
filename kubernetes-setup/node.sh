@@ -80,7 +80,7 @@ sudo mkdir -p /etc/systemd/system/docker.service.d
 sudo touch /etc/systemd/system/docker.service.d/http-proxy.conf
 sudo tee /etc/systemd/system/docker.service.d/http-proxy.conf <<EOF
 [Service]
-Environment="HTTP_PROXY=http://192.168.1.147:3128:80"
+Environment="HTTP_PROXY=http://192.168.1.147:3128"
 Environment="HTTPS_PROXY=http://192.168.1.147:3128"
 EOF
 
