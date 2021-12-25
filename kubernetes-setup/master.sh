@@ -110,11 +110,38 @@ sudo apt install -y containerd.io docker-ce docker-ce-cli
 
 # Create required directories
 sudo mkdir -p /etc/systemd/system/docker.service.d
+# adding my local pull-through cache
+sudo touch /etc/systemd/system/docker.service.d/http-proxy.conf
+sudo tee /etc/systemd/system/docker.service.d/http-proxy.conf <<EOF
+[Service]
+Environment="HTTP_PROXY=http://192.168.1.147:3128"
+Environment="HTTPS_PROXY=http://192.168.1.147:3128"
+EOF
+sudo curl http://192.168.1.147:3128/ca.crt > /usr/share/ca-certificates/docker_registry_proxy.crt
+sudo echo "docker_registry_proxy.crt" >> /etc/ca-certificates.conf
+sudo update-ca-certificates --fresh
 
+# Reload systemd
+systemctl daemon-reload
+
+# Restart dockerd
+systemctl restart docker.service
+
+# docker images multi-repo pull through cache example
+# Simple (no auth, all cache)
+#docker run --rm --name docker_registry_proxy -it \
+#       -p 0.0.0.0:3128:3128 -e ENABLE_MANIFEST_CACHE=true \
+#       -v $(pwd)/docker_mirror_cache:/docker_mirror_cache \
+#       -v $(pwd)/docker_mirror_certs:/ca \
+#       rpardini/docker-registry-proxy:0.6.2
+#
+#
+#
+#  "registry-mirrors": ["http://192.168.1.147:3128"],
+# Create daemon json config file
 # Create daemon json config file
 sudo tee /etc/docker/daemon.json <<EOF
 {
-  "registry-mirrors": ["http://192.168.1.88:6000"],
   "exec-opts": ["native.cgroupdriver=systemd"],
   "log-driver": "json-file",
   "log-opts": {
@@ -130,7 +157,7 @@ sudo systemctl restart docker
 sudo systemctl enable docker
 #                             -----------------------------
 
-
+sudo systemctl show --property=Environment docker
 #
 ##        CRI-o
 ## Ensure you load modules

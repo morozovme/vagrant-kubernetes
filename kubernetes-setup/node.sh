@@ -77,11 +77,19 @@ sudo apt install -y containerd.io docker-ce docker-ce-cli
 
 # Create required directories
 sudo mkdir -p /etc/systemd/system/docker.service.d
+sudo touch /etc/systemd/system/docker.service.d/http-proxy.conf
+sudo tee /etc/systemd/system/docker.service.d/http-proxy.conf <<EOF
+[Service]
+Environment="HTTP_PROXY=http://192.168.1.147:3128:80"
+Environment="HTTPS_PROXY=http://192.168.1.147:3128"
+EOF
 
+
+#
+#  "registry-mirrors": ["http://192.168.1.147:3128"],
 # Create daemon json config file
 sudo tee /etc/docker/daemon.json <<EOF
 {
-  "registry-mirrors": ["http://192.168.1.88:6000"],
   "exec-opts": ["native.cgroupdriver=systemd"],
   "log-driver": "json-file",
   "log-opts": {
