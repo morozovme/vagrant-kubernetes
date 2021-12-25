@@ -74,14 +74,18 @@ sudo echo "192.168.1.172 node-2.home" >> /etc/hosts
 #sudo echo 'Acquire::http { Proxy "http://192.168.1.147:3142"; };' >> /etc/apt/apt.conf.d/01proxy
 sudo echo 'Acquire::HTTP::Proxy "http://192.168.1.147:3142";' >> /etc/apt/apt.conf.d/01proxy
 sudo echo 'Acquire::HTTPS::Proxy "false";' >> /etc/apt/apt.conf.d/01proxy
+#sudo echo 'Acquire::HTTPS::Proxy "https://192.168.1.147:3142";' >> /etc/apt/apt.conf.d/01proxy
+#sudo echo 'Acquire::https { Proxy "http://192.168.1.147:3142"; };' >> /etc/apt/apt.conf.d/01proxy
 #export http_proxy=http://192.168.1.147:3142
+#sudo rm -f /etc/apt/trusted.gpg
+
 
 sudo apt update
-sudo apt -y install curl apt-transport-https
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+sudo apt -y install vim git curl wget # apt-transport-https
+curl -k -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 sudo apt update
-sudo apt -y install vim git curl wget kubelet kubeadm kubectl
+sudo apt -y install kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
 kubectl version --client && kubeadm version
 sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
@@ -107,15 +111,15 @@ sudo sysctl --system
 #  Docker
 # Add repo and Install packages
 #sudo apt update
-sudo apt install -y curl gnupg2 software-properties-common apt-transport-https ca-certificates
+#sudo apt install -y curl software-properties-common #gnupg2 # ca-certificates # apt-transport-https 
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo add-apt-repository "deb [arch=amd64] http://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 sudo apt update
 sudo apt install -y containerd.io docker-ce docker-ce-cli
-
-# Create required directories
+#
+## Create required directories
 sudo mkdir -p /etc/systemd/system/docker.service.d
-# adding my local pull-through cache
+## adding my local pull-through cache
 sudo touch /etc/systemd/system/docker.service.d/http-proxy.conf
 sudo tee /etc/systemd/system/docker.service.d/http-proxy.conf <<EOF
 [Service]
@@ -126,29 +130,29 @@ sudo curl http://192.168.1.147:3128/ca.crt > /usr/share/ca-certificates/docker_r
 sudo echo "docker_registry_proxy.crt" >> /etc/ca-certificates.conf
 sudo update-ca-certificates --fresh
 
-# Reload systemd
+## Reload systemd
 systemctl daemon-reload
-
-# Restart dockerd
+#
+## Restart dockerd
 systemctl restart docker.service
 
-# docker images multi-repo pull through cache example
-# Simple (no auth, all cache)
-#docker run --rm --name docker_registry_proxy -it \
-#       -p 0.0.0.0:3128:3128 -e ENABLE_MANIFEST_CACHE=true \
-#       -v $(pwd)/docker_mirror_cache:/docker_mirror_cache \
-#       -v $(pwd)/docker_mirror_certs:/ca \
-#       rpardini/docker-registry-proxy:0.6.2
-#
-#
-#
-#  "registry-mirrors": ["http://192.168.1.147:3128"],
-# Create daemon json config file
-# Create daemon json config file
+## docker images multi-repo pull through cache example
+## Simple (no auth, all cache)
+##docker run --rm --name docker_registry_proxy -it \
+##       -p 0.0.0.0:3128:3128 -e ENABLE_MANIFEST_CACHE=true \
+##       -v $(pwd)/docker_mirror_cache:/docker_mirror_cache \
+##       -v $(pwd)/docker_mirror_certs:/ca \
+##       rpardini/docker-registry-proxy:0.6.2
+##
+##
+##
+##  "registry-mirrors": ["http://192.168.1.147:3128"],
+## Create daemon json config file
+## Create daemon json config file
 sudo tee /etc/docker/daemon.json <<EOF
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
-  "log-driver": "json-file",
+ "log-driver": "json-file",
   "log-opts": {
     "max-size": "100m"
   },

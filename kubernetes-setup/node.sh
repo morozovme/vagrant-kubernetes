@@ -42,7 +42,7 @@ sudo echo 'Acquire::HTTPS::Proxy "false";' >> /etc/apt/apt.conf.d/01proxy
 
 sudo apt update
 sudo apt -y install curl apt-transport-https sshpass
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+curl -k -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 sudo apt update
 sudo apt -y install vim git curl wget kubelet kubeadm kubectl
@@ -70,10 +70,10 @@ sudo sysctl --system
 #                                               NOTE: You have to choose one runtime at a time.              !!!!!!!!!!!
 #  Docker
 # Add repo and Install packages
-sudo apt update
-sudo apt install -y curl gnupg2 software-properties-common apt-transport-https ca-certificates
+#sudo apt update
+#sudo apt install -y curl gnupg2 software-properties-common apt-transport-https ca-certificates
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo add-apt-repository "deb [arch=amd64] http://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 sudo apt update
 sudo apt install -y containerd.io docker-ce docker-ce-cli
 
