@@ -324,16 +324,27 @@ sudo curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 
 #chmod -R 777 /srv/nfs/mydata # for simple use but not advised
 
 
-#git clone https://github.com/mikefrostov/vagrant-virtualbox-ansible-kubernetes.git
-
-
-
 # To-Do: use nfs share for docker registry certs 
 #
 #  https://www.linuxtechi.com/setup-private-docker-registry-kubernetes/
 #
-#
-#
+
+
+sudo apt-get install nfs-kernel-server nfs-common portmap -y
+sudo systemctl start nfs-server
+sudo mkdir -p /srv/nfs/mydata 
+sudo chmod -R 777 /srv/nfs/ # for simple use but not advised
+sudo chown -R nobody:nogroup /srv/nfs/
+sudo echo "/srv/nfs/mydata  *(rw,sync,no_subtree_check,no_root_squash,insecure)" >> /etc/exports
+sudo exportfs -rv
+sudo mount -t nfs 192.168.1.170:/srv/nfs/mydata /mnt
+sudo helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
+sudo helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner \
+    --set nfs.server=192.168.1.170 \
+    --set nfs.path=/srv/nfs/mydata
+
+sudo kubectl patch storageclass local-storage -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
+sudo kubectl patch storageclass nfs-client -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 
 
 #  guestbook frontend service

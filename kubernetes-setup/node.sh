@@ -200,7 +200,7 @@ sudo lsmod | grep br_netfilter
 #sudo systemctl enable kubelet
 
 #sudo kubeadm config images pull
-
+sudo apt-get install nfs-common -y
 ssh-keygen -t rsa -N "" -f id_rsa
 sudo sshpass -p 'vagrant' ssh-copy-id -i id_rsa -oStrictHostKeyChecking=no vagrant@k8s-master.home
 sudo scp -i id_rsa vagrant@k8s-master.home:/tmp/join-command.sh /tmp/join-command.sh
