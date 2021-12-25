@@ -88,6 +88,9 @@ sudo curl http://192.168.1.147:3128/ca.crt > /usr/share/ca-certificates/docker_r
 sudo echo "docker_registry_proxy.crt" >> /etc/ca-certificates.conf
 sudo update-ca-certificates --fresh
 
+sudo echo 'Acquire::HTTP::Proxy "http://192.168.1.147:3142";' >> /etc/apt/apt.conf.d/01proxy
+sudo echo 'Acquire::HTTPS::Proxy "false";' >> /etc/apt/apt.conf.d/01proxy
+
 #
 #  "registry-mirrors": ["http://192.168.1.147:3128"],
 # Create daemon json config file

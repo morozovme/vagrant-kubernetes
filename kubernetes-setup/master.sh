@@ -71,6 +71,11 @@ sudo echo "192.168.1.172 node-2.home" >> /etc/hosts
 #
 #
 
+#sudo echo 'Acquire::http { Proxy "http://192.168.1.147:3142"; };' >> /etc/apt/apt.conf.d/01proxy
+sudo echo 'Acquire::HTTP::Proxy "http://192.168.1.147:3142";' >> /etc/apt/apt.conf.d/01proxy
+sudo echo 'Acquire::HTTPS::Proxy "false";' >> /etc/apt/apt.conf.d/01proxy
+#export http_proxy=http://192.168.1.147:3142
+
 sudo apt update
 sudo apt -y install curl apt-transport-https
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
@@ -101,7 +106,7 @@ sudo sysctl --system
 #                                               NOTE: You have to choose one runtime at a time.              !!!!!!!!!!!
 #  Docker
 # Add repo and Install packages
-sudo apt update
+#sudo apt update
 sudo apt install -y curl gnupg2 software-properties-common apt-transport-https ca-certificates
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
