@@ -9,7 +9,7 @@ Vagrant.configure("2") do |config|
         libvirt.storage :file, :size => '50G'
     end
 
-    config.vm.define "k8s-master.home" do |master|
+    config.vm.define "k8s-master" do |master|
         master.vm.box = IMAGE_NAME
         master.vm.network "public_network", bridge: "br0", dev: "br0", type: "bridge", mode: "bridge", ip: "192.168.1.170"
         master.vm.hostname = "k8s-master.home"

@@ -84,10 +84,16 @@ Environment="HTTP_PROXY=http://192.168.1.147:3128"
 Environment="HTTPS_PROXY=http://192.168.1.147:3128"
 EOF
 
+sudo curl http://192.168.1.147:3128/ca.crt > /usr/share/ca-certificates/docker_registry_proxy.crt
+sudo echo "docker_registry_proxy.crt" >> /etc/ca-certificates.conf
+sudo update-ca-certificates --fresh
 
 #
 #  "registry-mirrors": ["http://192.168.1.147:3128"],
 # Create daemon json config file
+#
+#  if you want to use insecure for https
+#  "insecure-registries" : ["gcr.io" , "googleapis.com", "quay.io"],
 sudo tee /etc/docker/daemon.json <<EOF
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
