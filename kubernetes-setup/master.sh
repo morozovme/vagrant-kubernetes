@@ -13,6 +13,10 @@ sudo echo "192.168.1.170 k8s-master.home" >> /etc/hosts
 sudo echo "192.168.1.171 node-1.home" >> /etc/hosts
 sudo echo "192.168.1.172 node-2.home" >> /etc/hosts
 
+sudo git config --global user.name "morozovme"
+sudo git config --global user.email "m.e.morozov1@gmail.com"
+git config --global user.name "morozovme"
+git config --global user.email "m.e.morozov1@gmail.com"
 
 
 
