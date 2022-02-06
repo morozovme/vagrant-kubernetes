@@ -2,7 +2,7 @@
 
 set -e
 
-NODEIP=$1
+MASTERIP=$1
 
 # delete vagrant auto-configured default gateway
 # to-do: add if default route == 192.168.121.1
@@ -17,10 +17,7 @@ sudo ip route add default via 192.168.1.1
 #sudo echo "UseRoutes=false" >> /run/systemd/network/10-netplan-eth0.network
 
 # to-do: substitute with variables from config.rb, add for each slave loop
-sudo echo "$NODEIP k8s-master.home" >> /etc/hosts
-sudo echo "192.168.1.171 node-1.home" >> /etc/hosts
-sudo echo "192.168.1.172 node-2.home" >> /etc/hosts
-
+sudo echo "$MASTERIP k8s-master.home" >> /etc/hosts
 
 # to-do: use credentials from config.rb
 sudo git config --global user.name "morozovme"
@@ -268,11 +265,11 @@ sudo systemctl enable kubelet
 
 sudo kubeadm config images pull
 
-sudo echo "KUBELET_EXTRA_ARGS=--node-ip=$NODEIP" >> /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+sudo echo "KUBELET_EXTRA_ARGS=--node-ip=$MASTERIP" >> /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 
 # to-do: use ip var
 # to-do: use CIDR var
-sudo kubeadm init --apiserver-advertise-address="$NODEIP" --apiserver-cert-extra-sans="$NODEIP"  --node-name k8s-master.home --pod-network-cidr=10.244.0.0/16 --control-plane-endpoint=k8s-master.home
+sudo kubeadm init --apiserver-advertise-address="$MASTERIP" --apiserver-cert-extra-sans="$MASTERIP"  --node-name k8s-master.home --pod-network-cidr=10.244.0.0/16 --control-plane-endpoint=k8s-master.home
 sudo kubeadm token create --print-join-command >> /tmp/join-command.sh
 
 
@@ -354,10 +351,10 @@ sudo chmod -R 777 /srv/nfs/ # for simple use but not advised
 sudo chown -R nobody:nogroup /srv/nfs/
 sudo echo "/srv/nfs/mydata  *(rw,sync,no_subtree_check,no_root_squash,insecure)" >> /etc/exports
 sudo exportfs -rv
-sudo mount -t nfs $NODEIP:/srv/nfs/mydata /mnt
+sudo mount -t nfs $MASTERIP:/srv/nfs/mydata /mnt
 sudo helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
 sudo helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner \
-    --set nfs.server=$NODEIP \
+    --set nfs.server=$MASTERIP \
     --set nfs.path=/srv/nfs/mydata
 
 sudo kubectl patch storageclass local-storage -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
