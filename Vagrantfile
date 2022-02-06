@@ -21,7 +21,7 @@ Vagrant.configure("2") do |config|
         master.vm.hostname = "k8s-master.home"
         #master.vm.provision :shell, :path => "kubernetes-setup/master.sh", :args => MASTERIP
         master.vm.provision "shell" do |s|
-            s.path = "kubernetes-setup/node.sh"
+            s.path = "kubernetes-setup/master.sh"
             s.args = [MASTERIP]
         end
     end
