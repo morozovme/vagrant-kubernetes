@@ -4,15 +4,25 @@ set -e
 
 NODEIP=$1
 
+# delete vagrant auto-configured default gateway
+# to-do: add if default route == 192.168.121.1
 sudo ip route del default via 192.168.121.1
+# to-do: add if default route == 10.0.2.2
 #sudo ip route del default via 10.0.2.2
+
+# add real LAN gateway as default
 sudo ip route add default via 192.168.1.1
 
+# to-do: configure netplan for persistance
 #sudo echo "UseRoutes=false" >> /run/systemd/network/10-netplan-eth0.network
-sudo echo "192.168.1.170 k8s-master.home" >> /etc/hosts
+
+# to-do: substitute with variables from config.rb, add for each slave loop
+sudo echo "$NODEIP k8s-master.home" >> /etc/hosts
 sudo echo "192.168.1.171 node-1.home" >> /etc/hosts
 sudo echo "192.168.1.172 node-2.home" >> /etc/hosts
 
+
+# to-do: use credentials from config.rb
 sudo git config --global user.name "morozovme"
 sudo git config --global user.email "m.e.morozov1@gmail.com"
 git config --global user.name "morozovme"
@@ -75,6 +85,7 @@ git config --global user.email "m.e.morozov1@gmail.com"
 #
 #
 
+# use local LAN apt cache server to save traffic
 #sudo echo 'Acquire::http { Proxy "http://192.168.1.147:3142"; };' >> /etc/apt/apt.conf.d/01proxy
 sudo echo 'Acquire::HTTP::Proxy "http://192.168.1.147:3142";' >> /etc/apt/apt.conf.d/01proxy
 sudo echo 'Acquire::HTTPS::Proxy "false";' >> /etc/apt/apt.conf.d/01proxy
@@ -152,7 +163,7 @@ systemctl restart docker.service
 ##
 ##  "registry-mirrors": ["http://192.168.1.147:3128"],
 ## Create daemon json config file
-## Create daemon json config file
+
 sudo tee /etc/docker/daemon.json <<EOF
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
@@ -259,7 +270,9 @@ sudo kubeadm config images pull
 
 sudo echo "KUBELET_EXTRA_ARGS=--node-ip=$NODEIP" >> /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 
-sudo kubeadm init --apiserver-advertise-address="$NODEIP" --apiserver-cert-extra-sans="192.168.1.170"  --node-name k8s-master.home --pod-network-cidr=10.244.0.0/16 --control-plane-endpoint=k8s-master.home
+# to-do: use ip var
+# to-do: use CIDR var
+sudo kubeadm init --apiserver-advertise-address="$NODEIP" --apiserver-cert-extra-sans="$NODEIP"  --node-name k8s-master.home --pod-network-cidr=10.244.0.0/16 --control-plane-endpoint=k8s-master.home
 sudo kubeadm token create --print-join-command >> /tmp/join-command.sh
 
 
@@ -341,10 +354,10 @@ sudo chmod -R 777 /srv/nfs/ # for simple use but not advised
 sudo chown -R nobody:nogroup /srv/nfs/
 sudo echo "/srv/nfs/mydata  *(rw,sync,no_subtree_check,no_root_squash,insecure)" >> /etc/exports
 sudo exportfs -rv
-sudo mount -t nfs 192.168.1.170:/srv/nfs/mydata /mnt
+sudo mount -t nfs $NODEIP:/srv/nfs/mydata /mnt
 sudo helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
 sudo helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner \
-    --set nfs.server=192.168.1.170 \
+    --set nfs.server=$NODEIP \
     --set nfs.path=/srv/nfs/mydata
 
 sudo kubectl patch storageclass local-storage -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
