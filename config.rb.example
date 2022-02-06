@@ -1,0 +1,11 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+#
+### CONFIG PARAMS ###
+GITNAME='username'
+GITEMAIL='email@gmail.com'
+GITEDITOR='vim'
+GITVERSION='2.23.0'
+GITHUBUSER='username'
+
+k8s-master-ip='192.168.1.170'
