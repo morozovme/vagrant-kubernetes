@@ -2,7 +2,8 @@
 
 set -e
 
-NODEIP=$1
+MASTERIP=$1
+NODEIP=$2
 
 #run this dude with sudo
 
@@ -12,9 +13,7 @@ sudo ip route add default via 192.168.1.1
 
 
 #sudo echo "UseRoutes=false" >> /run/systemd/network/10-netplan-eth0.network
-sudo echo "192.168.1.170 k8s-master.home" >> /etc/hosts
-sudo echo "192.168.1.171 node-1.home" >> /etc/hosts
-sudo echo "192.168.1.172 node-2.home" >> /etc/hosts
+sudo echo "$MASTERIP k8s-master.home" >> /etc/hosts
 sudo echo " Beginning the circus "
 
 
