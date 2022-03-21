@@ -281,6 +281,8 @@ kubectl cluster-info
 
 git clone https://github.com/morozovme/vagrant-kubernetes.git
 sudo kubectl create -f vagrant-kubernetes/kubernetes-setup/files/flannel.yaml
+
+# create local store presistent volume example
 mkdir -p /home/vagrant/pv1
 sudo chmod 777 /home/vagrant/pv1
 sudo kubectl create -f vagrant-kubernetes/kubernetes-setup/files/storageclass.yaml
@@ -294,40 +296,11 @@ sudo kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/
 sudo kubectl apply -f vagrant-kubernetes/kubernetes-setup/files/mllbconfig.yaml
 sudo kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 
-# apply mongo deployment 
-# 
-# kubectl apply -f https://k8s.io/examples/application/guestbook/mongo-deployment.yaml
 
-# apply mongo service
-# 
-# kubectl apply -f https://k8s.io/examples/application/guestbook/mongo-service.yaml
-
-# apply frontend deployment
-#
-# kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-deployment.yaml
-
-# name: apply frontend svc
-# 
-# kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-service.yaml
-
-sudo kubectl apply -f https://k8s.io/examples/application/guestbook/redis-leader-deployment.yaml
-sudo kubectl apply -f https://k8s.io/examples/application/guestbook/redis-leader-service.yaml
-sudo kubectl apply -f https://k8s.io/examples/application/guestbook/redis-follower-deployment.yaml
-sudo kubectl apply -f https://k8s.io/examples/application/guestbook/redis-follower-service.yaml
-sudo kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-deployment.yaml
-
-
-#  guestbook frontend service
-# 
-#  kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-service.yaml
-sudo kubectl apply -f vagrant-kubernetes/kubernetes-setup/files/guestbookLB.yaml
 sudo curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 
 
 # to do:  install ansible to ad-hoc provision slaves from inventory file simultaneously 
-
-
-
 # to-do : install NFS for volumes 
 # https://medium.com/@myte/kubernetes-nfs-and-dynamic-nfs-provisioning-97e2afb8b4a9
 
@@ -337,13 +310,12 @@ sudo curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 
 #mkdir -p /srv/nfs/mydata 
 #chmod -R 777 /srv/nfs/mydata # for simple use but not advised
 
-
 # To-Do: use nfs share for docker registry certs 
 #
 #  https://www.linuxtechi.com/setup-private-docker-registry-kubernetes/
 #
 
-
+# use nfs default volume storage
 sudo apt-get install nfs-kernel-server nfs-common portmap -y
 sudo systemctl start nfs-server
 sudo mkdir -p /srv/nfs/mydata 
@@ -356,27 +328,13 @@ sudo helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.githu
 sudo helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner \
     --set nfs.server=$MASTERIP \
     --set nfs.path=/srv/nfs/mydata
-
+# change default storageclass
 sudo kubectl patch storageclass local-storage -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
 sudo kubectl patch storageclass nfs-client -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 
 
-#  guestbook frontend service
-# 
-#  kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-service.yaml
 
 
-# install gitlab to kubernetes
-
-#sudo helm repo add gitlab https://charts.gitlab.io/
-
-#sudo helm install gitlab gitlab/gitlab \
-#  --set global.hosts.domain=gitlab.morozovme.com \
-#  --set certmanager-issuer.email=m.e.morozov1@gmail.com
-
-#sudo kubectl get ingress -lrelease=gitlab
-#sudo echo "------passwd for gitlabci:"
-#sudo kubectl get secret gitlab-gitlab-initial-root-password -ojsonpath='{.data.password}' | base64 --decode ; echo
 
 
 
