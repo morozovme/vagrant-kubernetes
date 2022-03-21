@@ -1,5 +1,0 @@
---- 
-master-hostname: "k8s-master"
-master-ip:  "192.168.1.170" 
-master-user: "vagrant"
-master-password: "vagrant"
