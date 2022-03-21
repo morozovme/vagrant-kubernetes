@@ -3,6 +3,9 @@
 set -e
 
 MASTERIP=$1
+DOCKERCACHE=$2
+APTCACHE=$3
+CIDR=$4
 
 # delete vagrant auto-configured default gateway
 # to-do: add if default route == 192.168.121.1
@@ -82,14 +85,24 @@ git config --global user.email "m.e.morozov1@gmail.com"
 #
 #
 
+
+# if APTCACHE != '' :
+if [ -z "$APTCACHE" ]
+then
+    echo "APTCACHE var is unset, using remote ubuntu mirrors"
+else 
+    sudo echo 'Acquire::HTTP::Proxy "http://'$APTCACHE'";' >> /etc/apt/apt.conf.d/01proxy
+    sudo echo 'Acquire::HTTPS::Proxy "false";' >> /etc/apt/apt.conf.d/01proxy
+fi
 # use local LAN apt cache server to save traffic
 #sudo echo 'Acquire::http { Proxy "http://192.168.1.147:3142"; };' >> /etc/apt/apt.conf.d/01proxy
-sudo echo 'Acquire::HTTP::Proxy "http://192.168.1.147:3142";' >> /etc/apt/apt.conf.d/01proxy
-sudo echo 'Acquire::HTTPS::Proxy "false";' >> /etc/apt/apt.conf.d/01proxy
+
 #sudo echo 'Acquire::HTTPS::Proxy "https://192.168.1.147:3142";' >> /etc/apt/apt.conf.d/01proxy
 #sudo echo 'Acquire::https { Proxy "http://192.168.1.147:3142"; };' >> /etc/apt/apt.conf.d/01proxy
 #export http_proxy=http://192.168.1.147:3142
 #sudo rm -f /etc/apt/trusted.gpg
+
+
 
 
 sudo apt update
@@ -129,18 +142,25 @@ sudo add-apt-repository "deb [arch=amd64] http://download.docker.com/linux/ubunt
 sudo apt update
 sudo apt install -y containerd.io docker-ce docker-ce-cli
 #
+
 ## Create required directories
 sudo mkdir -p /etc/systemd/system/docker.service.d
 ## adding my local pull-through cache
-sudo touch /etc/systemd/system/docker.service.d/http-proxy.conf
-sudo tee /etc/systemd/system/docker.service.d/http-proxy.conf <<EOF
-[Service]
-Environment="HTTP_PROXY=http://192.168.1.147:3128"
-Environment="HTTPS_PROXY=http://192.168.1.147:3128"
+if [ -z "$DOCKERCACHE" ]
+then
+    echo "DOCKERCACHE var is unset, skipping docker images caching"
+else 
+    sudo touch /etc/systemd/system/docker.service.d/http-proxy.conf
+    sudo tee /etc/systemd/system/docker.service.d/http-proxy.conf <<EOF
+    [Service]
+    Environment="HTTP_PROXY=http://$DOCKERCACHE"
+    Environment="HTTPS_PROXY=http://$DOCKERCACHE"
 EOF
-sudo curl http://192.168.1.147:3128/ca.crt > /usr/share/ca-certificates/docker_registry_proxy.crt
-sudo echo "docker_registry_proxy.crt" >> /etc/ca-certificates.conf
-sudo update-ca-certificates --fresh
+    sudo curl http://$DOCKERCACHE/ca.crt > /usr/share/ca-certificates/docker_registry_proxy.crt
+    sudo echo "docker_registry_proxy.crt" >> /etc/ca-certificates.conf
+    sudo update-ca-certificates --fresh
+fi
+
 
 ## Reload systemd
 systemctl daemon-reload
@@ -269,7 +289,7 @@ sudo echo "KUBELET_EXTRA_ARGS=--node-ip=$MASTERIP" >> /etc/systemd/system/kubele
 
 # to-do: use ip var
 # to-do: use CIDR var
-sudo kubeadm init --apiserver-advertise-address="$MASTERIP" --apiserver-cert-extra-sans="$MASTERIP"  --node-name k8s-master.home --pod-network-cidr=10.244.0.0/16 --control-plane-endpoint=k8s-master.home
+sudo kubeadm init --apiserver-advertise-address="$MASTERIP" --apiserver-cert-extra-sans="$MASTERIP"  --node-name k8s-master.home --pod-network-cidr="$CIDR" --control-plane-endpoint=k8s-master.home
 sudo kubeadm token create --print-join-command >> /tmp/join-command.sh
 
 

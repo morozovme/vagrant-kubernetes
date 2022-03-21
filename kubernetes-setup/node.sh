@@ -35,9 +35,13 @@ sudo echo " Beginning the circus "
 #sudo chmod +x /tmp/join-command.sh && sudo /tmp/join-command.sh     
 #
 
-sudo echo 'Acquire::HTTP::Proxy "http://192.168.1.147:3142";' >> /etc/apt/apt.conf.d/01proxy
-sudo echo 'Acquire::HTTPS::Proxy "false";' >> /etc/apt/apt.conf.d/01proxy
-
+if [ -z "$APTCACHE" ]
+then
+    echo "APTCACHE var is unset, using remote ubuntu mirrors"
+else 
+    sudo echo 'Acquire::HTTP::Proxy "http://'$APTCACHE'";' >> /etc/apt/apt.conf.d/01proxy
+    sudo echo 'Acquire::HTTPS::Proxy "false";' >> /etc/apt/apt.conf.d/01proxy
+fi
 
 sudo apt update
 sudo apt -y install curl apt-transport-https sshpass
@@ -78,16 +82,20 @@ sudo apt install -y containerd.io docker-ce docker-ce-cli
 
 # Create required directories
 sudo mkdir -p /etc/systemd/system/docker.service.d
-sudo touch /etc/systemd/system/docker.service.d/http-proxy.conf
-sudo tee /etc/systemd/system/docker.service.d/http-proxy.conf <<EOF
-[Service]
-Environment="HTTP_PROXY=http://192.168.1.147:3128"
-Environment="HTTPS_PROXY=http://192.168.1.147:3128"
+if [ -z "$DOCKERCACHE" ]
+then
+    echo "DOCKERCACHE var is unset, skipping docker images caching"
+else 
+    sudo touch /etc/systemd/system/docker.service.d/http-proxy.conf
+    sudo tee /etc/systemd/system/docker.service.d/http-proxy.conf <<EOF
+    [Service]
+    Environment="HTTP_PROXY=http://$DOCKERCACHE"
+    Environment="HTTPS_PROXY=http://$DOCKERCACHE"
 EOF
-
-sudo curl http://192.168.1.147:3128/ca.crt > /usr/share/ca-certificates/docker_registry_proxy.crt
-sudo echo "docker_registry_proxy.crt" >> /etc/ca-certificates.conf
-sudo update-ca-certificates --fresh
+    sudo curl http://$DOCKERCACHE/ca.crt > /usr/share/ca-certificates/docker_registry_proxy.crt
+    sudo echo "docker_registry_proxy.crt" >> /etc/ca-certificates.conf
+    sudo update-ca-certificates --fresh
+fi
 
 
 #
