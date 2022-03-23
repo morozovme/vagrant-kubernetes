@@ -5,6 +5,7 @@ metadata:
   namespace: jenkins
 spec:
   type: LoadBalancer
+  allocateLoadBalancerNodePorts: false
   ports:
     - port: 8080
   selector:
