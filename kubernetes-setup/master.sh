@@ -300,20 +300,20 @@ sudo chown $(id -u):$(id -g) /root/.kube/config
 kubectl cluster-info
 
 git clone https://github.com/morozovme/vagrant-kubernetes.git
-sudo kubectl create -f vagrant-kubernetes/kubernetes-setup/files/flannel.yaml
+sudo kubectl create -f vagrant-kubernetes/kubernetes-setup/files/cni/flannel.yaml
 
 # create local store presistent volume example
 mkdir -p /home/vagrant/pv1
 sudo chmod 777 /home/vagrant/pv1
-sudo kubectl create -f vagrant-kubernetes/kubernetes-setup/files/storageclass.yaml
-sudo kubectl create -f vagrant-kubernetes/kubernetes-setup/files/persistentvolume.yaml
+sudo kubectl create -f vagrant-kubernetes/kubernetes-setup/files/persistence/storageclass.yaml
+sudo kubectl create -f vagrant-kubernetes/kubernetes-setup/files/persistence/persistentvolume.yaml
 #sudo kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.9.3/manifests/namespace.yaml
 sudo kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/namespace.yaml
 
 #kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 sudo kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/metallb.yaml
 #sudo kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.9.3/manifests/metallb.yaml
-sudo kubectl apply -f vagrant-kubernetes/kubernetes-setup/files/mllbconfig.yaml
+sudo kubectl apply -f vagrant-kubernetes/kubernetes-setup/files/loadbalancer/mllbconfig.yaml
 sudo kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 
 
@@ -354,7 +354,7 @@ sudo kubectl patch storageclass nfs-client -p '{"metadata": {"annotations":{"sto
 
 
 
-
+ 
 
 
 
