@@ -85,7 +85,7 @@ git config --global user.email "m.e.morozov1@gmail.com"
 #
 #
 
-
+# use local LAN apt cache server to save traffic
 # if APTCACHE != '' :
 if [ -z "$APTCACHE" ]
 then
@@ -94,7 +94,7 @@ else
     sudo echo 'Acquire::HTTP::Proxy "http://'$APTCACHE'";' >> /etc/apt/apt.conf.d/01proxy
     sudo echo 'Acquire::HTTPS::Proxy "false";' >> /etc/apt/apt.conf.d/01proxy
 fi
-# use local LAN apt cache server to save traffic
+
 #sudo echo 'Acquire::http { Proxy "http://192.168.1.147:3142"; };' >> /etc/apt/apt.conf.d/01proxy
 
 #sudo echo 'Acquire::HTTPS::Proxy "https://192.168.1.147:3142";' >> /etc/apt/apt.conf.d/01proxy
@@ -110,9 +110,18 @@ sudo apt -y install vim git curl wget # apt-transport-https
 curl -k -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 sudo apt update
+
+# https://stackoverflow.com/questions/49721708/how-to-install-specific-version-of-kubernetes
+# sudo apt-get install -qy kubelet=<version> kubectl=<version> kubeadm=<version>
+# curl -s https://packages.cloud.google.com/apt/dists/kubernetes-xenial/main/binary-amd64/Packages | grep Version | awk '{print $2}'
+
+
 sudo apt -y install kubelet kubeadm kubectl
+
 sudo apt-mark hold kubelet kubeadm kubectl
+
 kubectl version --client && kubeadm version
+
 sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 sudo swapoff -a
 # Enable kernel modules
