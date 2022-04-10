@@ -23,7 +23,7 @@ Use config.rb to set list of LAN static ip addresses
 
 And the problems there are indeed... 
 
-1) vagrant adds default NIC that it uses to configure and provision VMS. It configures default route to that NIC which is NAT. K8s can't use that so the workaround is to: 
+1) (fixed) vagrant adds default NIC that it uses to configure and provision VMS. It configures default route to that NIC which is NAT. K8s can't use that so the workaround is to: 
 - Add second NIC and assign static IP address to that and add all the vms hostnames and addresses to /etc/hosts
 - reconfigure default routes, drop gateway added by vagrant through virtualbox/libvirt and set our LAN default gateway
 - (to-do) use netplan to make this permanent so the cluster survives reboot and avoid manually reconfiguring default gateways
