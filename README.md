@@ -19,9 +19,9 @@ vagrant up
 ```
 Use config.rb to set list of LAN static ip addresses
 
-## problems
+## Problems
 
-Problems there are... 
+And the problems there are indeed... 
 
 1) vagrant adds default NIC that it uses to configure and provision VMS. It configures default route to that NIC which is NAT. K8s can't use that so the workaround is to: 
 - Add second NIC and assign static IP address to that and add all the vms hostnames and addresses to /etc/hosts
@@ -37,3 +37,5 @@ Problems there are...
 5) vagrant boxes aren't downloadable from hashicorp due to ip ban
 
 6) (to-do) Vagrantfile needs adjustment for libvirt/virtualbox vm config atm. Need to add provider detection.
+
+7) when vagrant built manually from dev branch, provisioning starts before the NIC is configured, hence gotta first create vms with --no-provision option and later vagrant up --provision
