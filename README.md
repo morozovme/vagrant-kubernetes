@@ -35,3 +35,5 @@ Problems there are...
 4) (to-do) firewalld blocks libvirt VM traffic if you build vagrant manually. W/a = systemctl stop firewalld && systemct disable firewalld
 
 5) vagrant boxes aren't downloadable from hashicorp due to ip ban
+
+6) (to-do) Vagrantfile needs adjustment for libvirt/virtualbox vm config atm. Need to add provider detection.
