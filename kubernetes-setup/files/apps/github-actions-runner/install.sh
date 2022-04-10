@@ -9,7 +9,7 @@ set -e
 
 helm repo add actions-runner-controller https://actions-runner-controller.github.io/actions-runner-controller
 helm upgrade --install --namespace actions-runner-system --create-namespace \
-             --wait actions-runner-controller actions-runner-controller/actions-runner-controller
+             --wait actions-runner-controller actions-runner-controller/actions-runner-controller -f values.yaml
 
 
 
