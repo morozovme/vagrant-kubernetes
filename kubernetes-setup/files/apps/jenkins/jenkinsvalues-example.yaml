@@ -772,11 +772,13 @@ persistence:
   annotations: {}
   labels: {}
   accessMode: "ReadWriteOnce"
-  size: "8Gi"
+  size: "80Gi"
   volumes:
   #  - name: nothing
   #    emptyDir: {}
   mounts:
+    - name: jenkins-vol
+      mountPath: /var/jenkins_home
   #  - mountPath: /var/nothing
   #    name: nothing
   #    readOnly: true
@@ -875,7 +877,7 @@ backup:
   # Supported cloud storage services: AWS S3, Minio S3, Azure Blob Storage, Google Cloud Storage
   # Additional support can added. Visit this repository for details
   # Ref: https://github.com/maorfr/skbn
-  destination: "s3://jenkins-data/backup"
+  #destination: "s3://jenkins-data/backup"
   # By enabling only the jenkins_home/jobs folder gets backed up, not the whole jenkins instance
   onlyJobs: false
   # Enable backup pod security context (must be `true` if runAsUser or fsGroup are set)
