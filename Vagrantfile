@@ -44,7 +44,7 @@ Vagrant.configure("2") do |config|
             #node.vm.provision :shell, :path => "kubernetes-setup/node.sh", :args => NODEIP[i], "192.168.1.170"
             node.vm.provision "shell" do |s|
                 s.path = "kubernetes-setup/node.sh"
-                s.args = [MASTERIP, NODEIP[i], DOCKERCACHE, APTCACHE,]
+                s.args = [MASTERIP, NODEIP[i], DOCKERCACHE, APTCACHE]
               end
         end
     end

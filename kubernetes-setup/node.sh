@@ -4,7 +4,8 @@ set -e
 
 MASTERIP=$1
 NODEIP=$2
-
+DOCKERCACHE=$3
+APTCACHE=$4
 #run this dude with sudo
 
 sudo ip route del default via 192.168.121.1
