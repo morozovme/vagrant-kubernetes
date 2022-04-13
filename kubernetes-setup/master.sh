@@ -138,6 +138,7 @@ EOF
 # Reload sysctl
 sudo sysctl --system
 
+git clone https://github.com/morozovme/vagrant-kubernetes.git
 
 # install container runtime
 sudo chmod +x /home/vagrant/vagrant-kubernetes/kubernetes-setup/files/ct-runtime/docker.sh
@@ -165,7 +166,7 @@ sudo chown $(id -u):$(id -g) /root/.kube/config
 
 kubectl cluster-info
 
-git clone https://github.com/morozovme/vagrant-kubernetes.git
+
 sudo kubectl create -f vagrant-kubernetes/kubernetes-setup/files/cni/flannel.yaml
 
 # create local store presistent volume example
