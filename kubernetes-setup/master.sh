@@ -6,6 +6,7 @@ MASTERIP=$1
 DOCKERCACHE=$2
 APTCACHE=$3
 CIDR=$4
+KUBEVERSION=$5
 
 # delete vagrant auto-configured default gateway
 # to-do: add if default route == 192.168.121.1
@@ -20,7 +21,7 @@ sudo ip route add default via 192.168.1.1
 #sudo echo "UseRoutes=false" >> /run/systemd/network/10-netplan-eth0.network
 
 # to-do: substitute with variables from config.rb, add for each slave loop
-sudo echo "$MASTERIP k8s-master.home" >> /etc/hosts
+sudo echo "$MASTERIP k8s-master2.vm" >> /etc/hosts
 
 # to-do: use credentials from config.rb
 sudo git config --global user.name "morozovme"
@@ -112,11 +113,10 @@ echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt
 sudo apt update
 
 # https://stackoverflow.com/questions/49721708/how-to-install-specific-version-of-kubernetes
-# sudo apt-get install -qy kubelet=<version> kubectl=<version> kubeadm=<version>
+#
 # curl -s https://packages.cloud.google.com/apt/dists/kubernetes-xenial/main/binary-amd64/Packages | grep Version | awk '{print $2}'
 
-
-sudo apt -y install kubelet kubeadm kubectl
+sudo apt-get install -qy kubelet=$KUBEVERSION kubectl=$KUBEVERSION kubeadm=$KUBEVERSION
 
 sudo apt-mark hold kubelet kubeadm kubectl
 

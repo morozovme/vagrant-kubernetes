@@ -6,6 +6,7 @@ MASTERIP=$1
 NODEIP=$2
 DOCKERCACHE=$3
 APTCACHE=$4
+KUBEVERSION=$5
 #run this dude with sudo
 
 sudo ip route del default via 192.168.121.1
@@ -49,7 +50,8 @@ sudo apt -y install curl apt-transport-https sshpass
 curl -k -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 sudo apt update
-sudo apt -y install vim git curl wget kubelet kubeadm kubectl
+sudo apt -y install vim git curl wget
+sudo apt-get install -qy kubelet=$KUBEVERSION kubectl=$KUBEVERSION kubeadm=$KUBEVERSION
 sudo apt-mark hold kubelet kubeadm kubectl
 kubectl version --client && kubeadm version
 sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab

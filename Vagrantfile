@@ -19,10 +19,9 @@ Vagrant.configure("2") do |config|
         master.vm.box = IMAGE_NAME
         master.vm.network "public_network", bridge: "br0", dev: "br0", type: "bridge", mode: "bridge", ip: MASTERIP
         master.vm.hostname = "k8s-master.home"
-        #master.vm.provision :shell, :path => "kubernetes-setup/master.sh", :args => MASTERIP
         master.vm.provision "shell" do |s|
             s.path = "kubernetes-setup/master.sh"
-            s.args = [MASTERIP, DOCKERCACHE, APTCACHE, CIDR]
+            s.args = [MASTERIP, DOCKERCACHE, APTCACHE, CIDR, KUBEVERSION ]
         end
     end
 end
@@ -41,10 +40,9 @@ Vagrant.configure("2") do |config|
             node_ip = NODEIP[i]
             node.vm.network "public_network", bridge: "br0", dev: "br0", type: "bridge", mode: "bridge", ip: "#{node_ip}"
             node.vm.hostname = "node-#{i}.home"
-            #node.vm.provision :shell, :path => "kubernetes-setup/node.sh", :args => NODEIP[i], "192.168.1.170"
             node.vm.provision "shell" do |s|
                 s.path = "kubernetes-setup/node.sh"
-                s.args = [MASTERIP, NODEIP[i], DOCKERCACHE, APTCACHE]
+                s.args = [MASTERIP, NODEIP[i], DOCKERCACHE, APTCACHE, KUBEVERSION]
               end
         end
     end
