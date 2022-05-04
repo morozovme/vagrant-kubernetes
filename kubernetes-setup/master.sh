@@ -24,10 +24,6 @@ sudo ip route add default via 192.168.1.1
 sudo echo "$MASTERIP k8s-master2.vm" >> /etc/hosts
 
 # to-do: use credentials from config.rb
-sudo git config --global user.name "morozovme"
-sudo git config --global user.email "m.e.morozov1@gmail.com"
-git config --global user.name "morozovme"
-git config --global user.email "m.e.morozov1@gmail.com"
 
 
 
