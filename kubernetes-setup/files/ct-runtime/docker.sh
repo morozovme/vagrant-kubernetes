@@ -1,3 +1,10 @@
+#!/bin/bash
+
+set -e
+
+MASTERHOSTNAME=$1
+DOCKERCACHE=$2
+
 #  Docker
 # Add repo and Install packages
 #sudo apt update

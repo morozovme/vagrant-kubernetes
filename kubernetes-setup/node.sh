@@ -9,9 +9,6 @@ APTCACHE=$4
 KUBEVERSION=$5
 MASTERHOSTNAME=$6
 
-export MASTERHOSTNAME=$6
-export DOCKERCACHE=$2
-
 #run this dude with sudo
 
 sudo ip route del default via 192.168.121.1
@@ -79,7 +76,7 @@ git clone https://github.com/morozovme/vagrant-kubernetes.git
 
 # install container runtime
 sudo chmod +x /home/vagrant/vagrant-kubernetes/kubernetes-setup/files/ct-runtime/docker.sh
-sudo /home/vagrant/vagrant-kubernetes/kubernetes-setup/files/ct-runtime/docker.sh
+sudo /home/vagrant/vagrant-kubernetes/kubernetes-setup/files/ct-runtime/docker.sh $MASTERHOSTNAME $DOCKERCACHE
 
 
 sudo lsmod | grep br_netfilter
