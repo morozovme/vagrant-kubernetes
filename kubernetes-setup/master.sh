@@ -9,7 +9,8 @@ CIDR=$4
 KUBEVERSION=$5
 MASTERHOSTNAME=$6
 
-#export MASTERHOSTNAME=$6
+export MASTERHOSTNAME=$6
+export DOCKERCACHE=$2
 
 # delete vagrant auto-configured default gateway
 # to-do: add if default route == 192.168.121.1

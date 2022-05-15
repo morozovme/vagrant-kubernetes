@@ -9,6 +9,9 @@ APTCACHE=$4
 KUBEVERSION=$5
 MASTERHOSTNAME=$6
 
+export MASTERHOSTNAME=$6
+export DOCKERCACHE=$2
+
 #run this dude with sudo
 
 sudo ip route del default via 192.168.121.1
