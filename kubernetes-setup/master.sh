@@ -7,6 +7,9 @@ DOCKERCACHE=$2
 APTCACHE=$3
 CIDR=$4
 KUBEVERSION=$5
+MASTERHOSTNAME=$6
+
+#export MASTERHOSTNAME=$6
 
 # delete vagrant auto-configured default gateway
 # to-do: add if default route == 192.168.121.1
@@ -21,7 +24,7 @@ sudo ip route add default via 192.168.1.1
 #sudo echo "UseRoutes=false" >> /run/systemd/network/10-netplan-eth0.network
 
 # to-do: substitute with variables from config.rb, add for each slave loop
-sudo echo "$MASTERIP k8s-master2.vm" >> /etc/hosts
+sudo echo "$MASTERIP $MASTERHOSTNAME" >> /etc/hosts
 
 # to-do: use credentials from config.rb
 
@@ -152,7 +155,7 @@ sudo echo "KUBELET_EXTRA_ARGS=--node-ip=$MASTERIP" >> /etc/systemd/system/kubele
 
 # to-do: use ip var
 # to-do: use CIDR var
-sudo kubeadm init --apiserver-advertise-address="$MASTERIP" --apiserver-cert-extra-sans="$MASTERIP"  --node-name k8s-master.home --pod-network-cidr="$CIDR" --control-plane-endpoint=k8s-master.home
+sudo kubeadm init --apiserver-advertise-address="$MASTERIP" --apiserver-cert-extra-sans="$MASTERIP"  --node-name "$MASTERHOSTNAME" --pod-network-cidr="$CIDR" --control-plane-endpoint="$MASTERHOSTNAME"
 sudo kubeadm token create --print-join-command >> /tmp/join-command.sh
 
 

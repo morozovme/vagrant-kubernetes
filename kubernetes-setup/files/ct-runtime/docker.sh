@@ -50,6 +50,7 @@ sudo tee /etc/docker/daemon.json <<EOF
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
  "log-driver": "json-file",
+ "insecure-registries" : [ "$MASTERHOSTNAME:5000" ],
   "log-opts": {
     "max-size": "100m"
   },

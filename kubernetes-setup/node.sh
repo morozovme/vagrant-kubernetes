@@ -7,6 +7,8 @@ NODEIP=$2
 DOCKERCACHE=$3
 APTCACHE=$4
 KUBEVERSION=$5
+MASTERHOSTNAME=$6
+
 #run this dude with sudo
 
 sudo ip route del default via 192.168.121.1
@@ -15,7 +17,7 @@ sudo ip route add default via 192.168.1.1
 
 
 #sudo echo "UseRoutes=false" >> /run/systemd/network/10-netplan-eth0.network
-sudo echo "$MASTERIP k8s-master.home" >> /etc/hosts
+sudo echo "$MASTERIP $MASTERHOSTNAME" >> /etc/hosts
 sudo echo " Beginning the circus "
 
 

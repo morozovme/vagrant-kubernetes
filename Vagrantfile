@@ -15,13 +15,13 @@ Vagrant.configure("2") do |config|
         libvirt.storage :file, :size => '50G'
     end
 
-    config.vm.define "k8s-master" do |master|
+    config.vm.define MASTERHOSTNAME do |master|
         master.vm.box = IMAGE_NAME
         master.vm.network "public_network", bridge: "br0", dev: "br0", type: "bridge", mode: "bridge", ip: MASTERIP
         master.vm.hostname = "k8s-master.home"
         master.vm.provision "shell" do |s|
             s.path = "kubernetes-setup/master.sh"
-            s.args = [MASTERIP, DOCKERCACHE, APTCACHE, CIDR, KUBEVERSION ]
+            s.args = [MASTERIP, DOCKERCACHE, APTCACHE, CIDR, KUBEVERSION, MASTERHOSTNAME]
         end
     end
 end
@@ -42,7 +42,7 @@ Vagrant.configure("2") do |config|
             node.vm.hostname = "node-#{i}.home"
             node.vm.provision "shell" do |s|
                 s.path = "kubernetes-setup/node.sh"
-                s.args = [MASTERIP, NODEIP[i], DOCKERCACHE, APTCACHE, KUBEVERSION]
+                s.args = [MASTERIP, NODEIP[i], DOCKERCACHE, APTCACHE, KUBEVERSION, MASTERHOSTNAME]
               end
         end
     end
