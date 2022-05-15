@@ -87,7 +87,7 @@ sudo lsmod | grep br_netfilter
 sudo apt-get install nfs-common -y
 ssh-keygen -t rsa -N "" -f id_rsa
 sudo sshpass -p 'vagrant' ssh-copy-id -i id_rsa -oStrictHostKeyChecking=no vagrant@$MASTERHOSTNAME
-sudo scp -i id_rsa vagrant@k8s-master.home:/tmp/join-command.sh /tmp/join-command.sh
+sudo scp -i id_rsa vagrant@$MASTERHOSTNAME:/tmp/join-command.sh /tmp/join-command.sh
 sudo chmod +x /tmp/join-command.sh && sudo /tmp/join-command.sh 
 mkdir -p /home/vagrant/pv1
 sudo chmod 777 /home/vagrant/pv1
