@@ -18,7 +18,7 @@ Vagrant.configure("2") do |config|
     config.vm.define MASTERHOSTNAME do |master|
         master.vm.box = IMAGE_NAME
         master.vm.network "public_network", bridge: "br0", dev: "br0", type: "bridge", mode: "bridge", ip: MASTERIP
-        master.vm.hostname = "k8s-master.home"
+        master.vm.hostname = MASTERHOTNAME
         master.vm.provision "shell" do |s|
             s.path = "kubernetes-setup/master.sh"
             s.args = [MASTERIP, DOCKERCACHE, APTCACHE, CIDR, KUBEVERSION, MASTERHOSTNAME]
