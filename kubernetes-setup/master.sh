@@ -219,9 +219,3 @@ sudo helm install nfs-subdir-external-provisioner nfs-subdir-external-provisione
 sudo kubectl patch storageclass local-storage -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
 sudo kubectl patch storageclass nfs-client -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 
-
-
- 
-
-
-
