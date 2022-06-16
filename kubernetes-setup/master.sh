@@ -167,7 +167,14 @@ sudo kubectl patch storageclass nfs-client -p '{"metadata": {"annotations":{"sto
 # add logging
 # add alerting
 # add Active Directory
-# add WSO2 And other API Mangament solutions
+# add WSO2
+# add gravitee
+# add API Umbrella
+# add APIman
+# add Kong
+# add Tyk
+# add Swagger
+# add Apigility
 # add cert-manager with wildcard cert
 # add subdomain configuration xxx.domain.com for apps
 # add loki
@@ -189,6 +196,10 @@ sudo kubectl patch storageclass nfs-client -p '{"metadata": {"annotations":{"sto
 # add helmchart museum
 # add SonarQube
 # add Sentry
+# add metallb
+# add LinkerD
+# add metrics-server
+# add Dashboard
 
 
 # add storage stack:
