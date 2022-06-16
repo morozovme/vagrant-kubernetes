@@ -236,8 +236,7 @@ sudo kubectl patch storageclass nfs-client -p '{"metadata": {"annotations":{"sto
 # add kubespray, k8s the hard way alternative installation scripts
 # add kubernetes production security setup scripts
 # add infra configuration to config.rb
-
-
-
-
-
+# add Active Directory
+# add WSO2 And other API Mangament solutions
+# add OIDC oauth2 JWT
+# add apps with kafka redis rabbitmq 
