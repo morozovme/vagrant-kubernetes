@@ -158,3 +158,4 @@ sudo kubectl patch storageclass nfs-client -p '{"metadata": {"annotations":{"sto
 # add apps with kafka redis rabbitmq
 # add cert-manager with wildcard cert
 # add subdomain configuration xxx.domain.com for apps
+# add k3s, k0s, kind distros
