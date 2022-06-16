@@ -221,7 +221,23 @@ sudo kubectl patch storageclass nfs-client -p '{"metadata": {"annotations":{"sto
 
 
 
- 
+# to do: 
+# run private docker registry
+# setup https on docker registry
+# optional: configure and run gitea
+# optional: pull repos and push them to gitea
+# pull app source and helm chart for dummy app from remote
+# build and push to private registry
+# deploy to kubernetes app along with resources needed for app
+# deploy jenkins with values and configure pipelines
+# run pipelines
+# deploy prometheus grafana with configured monitoring
+# add logging and alerting
+# add kubespray, k8s the hard way alternative installation scripts
+# add kubernetes production security setup scripts
+# add infra configuration to config.rb
+
+
 
 
 
