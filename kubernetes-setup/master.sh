@@ -138,24 +138,85 @@ sudo kubectl patch storageclass nfs-client -p '{"metadata": {"annotations":{"sto
 
 
 # to do: 
+
+
+# add engine stack:
+# add kubeadm 
+# add kubespray
+# add k8s the hard way
+# add kubernetes production security setup scripts
+# add k3s
+# add k0s
+# add kind
+# add containerd
+# add cri-o
+# add podman
+# add runc
+# add OpenShift
+
+
+# add infra stack:
+# add infra configuration to config.rb
 # run private docker registry
 # setup https on docker registry
 # optional: configure and run gitea
 # optional: pull repos and push them to gitea
+# deploy prometheus 
+# deploy grafana
+# configure monitoring
+# add logging
+# add alerting
+# add Active Directory
+# add WSO2 And other API Mangament solutions
+# add cert-manager with wildcard cert
+# add subdomain configuration xxx.domain.com for apps
+# add loki
+# add graphite
+# add thanos
+# add envoy
+# add istio (+ HA)
+# add master node HA
+# add kui
+# add kuberlogic
+# add telepresence
+# add Fission
+# add ArgoCD
+# add jenkins with values
+# configure iac pipelines
+# deploy app stack
+# add vault
+# add keystore
+# add helmchart museum
+# add SonarQube
+# add Sentry
+
+
+# add storage stack:
+# add Ceph
+# add NFS
+# add MiniO
+# add OpenEBS
+# add Rook
+# add GlusterFS
+# add Portworx
+# add longHorn
+
+
+# add app stack
 # pull app source and helm chart for dummy app from remote
 # build and push to private registry
 # deploy to kubernetes app along with resources needed for app
-# deploy jenkins with values and configure pipelines
-# run pipelines
-# deploy prometheus grafana with configured monitoring
-# add logging and alerting
-# add kubespray, k8s the hard way alternative installation scripts
-# add kubernetes production security setup scripts
-# add infra configuration to config.rb
-# add Active Directory
-# add WSO2 And other API Mangament solutions
-# add OIDC oauth2 JWT
-# add apps with kafka redis rabbitmq
-# add cert-manager with wildcard cert
-# add subdomain configuration xxx.domain.com for apps
-# add k3s, k0s, kind distros
+# add OIDC 
+# add oauth2 
+# add JWT
+# add kafka 
+# add redis 
+# add rabbitmq
+# add memcached
+# add consul
+# add mlops
+# add kubeflow
+# add vitess
+# add patroni
+# add percona
+# add web3
