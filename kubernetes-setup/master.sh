@@ -140,94 +140,95 @@ sudo kubectl patch storageclass nfs-client -p '{"metadata": {"annotations":{"sto
 # to do: 
 
 
-# add engine stack:
-# add kubeadm 
-# add kubespray
-# add k8s the hard way
-# add kubernetes production security setup scripts
-# add k3s
-# add k0s
-# add kind
-# add containerd
-# add cri-o
-# add podman
-# add runc
-# add OpenShift
+# add engine stack: 
+# add kubeadm           ( + )
+# add kubespray         ( - )
+# add k8s the hard way  ( - )
+# add k8s PRD setup     ( - )
+# add k3s               ( - )
+# add k0s               ( - )
+# add kind              ( - )
+# add containerd        ( test )
+# add cri-o             ( test )
+# add podman            ( - )
+# add runc              ( - )
+# add OpenShift         ( - )
 
 
 # add infra stack:
-# add infra configuration to config.rb
-# run private docker registry
-# setup https on docker registry
-# optional: configure and run gitea
-# optional: pull repos and push them to gitea
-# deploy prometheus 
-# deploy grafana
-# configure monitoring
-# add logging
-# add alerting
-# add Active Directory
-# add WSO2
-# add gravitee
-# add API Umbrella
-# add APIman
-# add Kong
-# add Tyk
-# add Swagger
-# add Apigility
-# add cert-manager with wildcard cert
-# add subdomain configuration xxx.domain.com for apps
-# add loki
-# add graphite
-# add thanos
-# add envoy
-# add istio (+ HA)
-# add master node HA
-# add kui
-# add kuberlogic
-# add telepresence
-# add Fission
-# add ArgoCD
-# add jenkins with values
-# configure iac pipelines
-# deploy app stack
-# add vault
-# add keystore
-# add helmchart museum
-# add SonarQube
-# add Sentry
-# add metallb
-# add LinkerD
-# add metrics-server
-# add Dashboard
+# add infra configuration to config.rb        ( + )
+# run private docker registry                 ( + )
+# setup https on docker registry              ( - )
+# optional: configure and run gitea           ( + )
+# optional: pull repos and push them to gitea ( - )
+# deploy prometheus                           ( + )
+# deploy grafana                              ( + )
+# configure monitoring                        ( - )
+# add logging                                 ( - )
+# add alerting                                ( - )
+# add Active Directory                        ( - )
+# add RBAC policies and stuff                 ( - )
+# add WSO2                                    ( - )
+# add gravitee                                ( - )
+# add API Umbrella                            ( - )
+# add APIman                                  ( - )
+# add Kong                                    ( - )
+# add Tyk                                     ( - )
+# add Swagger                                 ( - )
+# add Apigility                               ( - )
+# add cert-manager with wildcard cert         ( - )
+# add subdomain configuration xxx.domain.com for apps  ( - )
+# add loki                                    ( - )
+# add graphite                                ( - )
+# add thanos                                  ( - )
+# add envoy                                   ( - )
+# add istio (+ HA)                            ( - )
+# add master node HA                          ( - )
+# add kui                                     ( - )
+# add kuberlogic                              ( - )
+# add telepresence                            ( - )
+# add Fission                                 ( + )
+# add ArgoCD                                  ( + )
+# add jenkins with values                     ( - )
+# configure iac pipelines                     ( - )
+# deploy app stack                            ( - )
+# add vault                                   ( - )
+# add keystore                                ( - )
+# add helmchart museum                        ( - )
+# add SonarQube                               ( - )
+# add Sentry                                  ( - )
+# add metallb                                 ( + )
+# add LinkerD                                 ( - )
+# add metrics-server                          ( - )
+# add Dashboard                               ( - )
 
 
 # add storage stack:
-# add Ceph
-# add NFS
-# add MiniO
-# add OpenEBS
-# add Rook
-# add GlusterFS
-# add Portworx
-# add longHorn
+# add Ceph                                    ( - )
+# add NFS                                     ( + )
+# add MiniO                                   ( - )
+# add OpenEBS                                 ( - )
+# add Rook                                    ( - )
+# add GlusterFS                               ( - )
+# add Portworx                                ( - )
+# add longHorn                                ( - )
 
 
 # add app stack
 # pull app source and helm chart for dummy app from remote
 # build and push to private registry
 # deploy to kubernetes app along with resources needed for app
-# add OIDC 
-# add oauth2 
-# add JWT
-# add kafka 
-# add redis 
-# add rabbitmq
-# add memcached
-# add consul
-# add mlops
-# add kubeflow
-# add vitess
-# add patroni
-# add percona
-# add web3
+# add OIDC                                    ( - )
+# add oauth2                                  ( - )
+# add JWT                                     ( - )
+# add kafka                                   ( - )
+# add redis                                   ( - )
+# add rabbitmq                                ( - )
+# add memcached                               ( - )
+# add consul                                  ( - )
+# add mlops                                   ( - )
+# add kubeflow                                ( - )
+# add vitess                                  ( - )
+# add patroni                                 ( - )
+# add percona                                 ( - )
+# add web3                                    ( - )
