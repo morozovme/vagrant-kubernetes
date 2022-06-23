@@ -96,27 +96,15 @@ sudo mkdir -p /root/.kube
 sudo cp -i /etc/kubernetes/admin.conf /root/.kube/config
 sudo chown $(id -u):$(id -g) /root/.kube/config
 
+
 kubectl cluster-info
+
+sudo chmod +x /home/vagrant/vagrant-kubernetes/kubernetes-setup/files/persistance/local.sh
+sudo /home/vagrant/vagrant-kubernetes/kubernetes-setup/files/persistance/local.sh
 
 
 sudo kubectl create -f vagrant-kubernetes/kubernetes-setup/files/cni/flannel.yaml
 
-# create local store presistent volume example
-mkdir -p /home/vagrant/pv1
-sudo chmod 777 /home/vagrant/pv1
-sudo kubectl create -f vagrant-kubernetes/kubernetes-setup/files/persistence/storageclass.yaml
-sudo kubectl create -f vagrant-kubernetes/kubernetes-setup/files/persistence/persistentvolume.yaml
-#sudo kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.9.3/manifests/namespace.yaml
-sudo kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/namespace.yaml
-
-#kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
-sudo kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/metallb.yaml
-#sudo kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.9.3/manifests/metallb.yaml
-sudo kubectl apply -f vagrant-kubernetes/kubernetes-setup/files/loadbalancer/mllbconfig.yaml
-sudo kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
-
-# install helm
-sudo curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 
 # use nfs default volume storage
 sudo apt-get install nfs-kernel-server nfs-common portmap -y
@@ -131,12 +119,15 @@ sudo helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.githu
 sudo helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner \
     --set nfs.server=$MASTERIP \
     --set nfs.path=/srv/nfs/mydata
+
 # change default storageclass
 sudo kubectl patch storageclass local-storage -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
 sudo kubectl patch storageclass nfs-client -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 
-<<<<<<< HEAD
-=======
+
+# install helm
+sudo curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
 
 
 # to do: 
@@ -238,4 +229,4 @@ sudo kubectl patch storageclass nfs-client -p '{"metadata": {"annotations":{"sto
 # add patroni                                 ( - )
 # add percona                                 ( - )
 # add web3                                    ( - )
->>>>>>> a8fac4a4dcaa78d82ecc56fd2b5f828a7ab040b6
+
