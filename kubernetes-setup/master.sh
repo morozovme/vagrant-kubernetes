@@ -105,6 +105,8 @@ sudo /home/vagrant/vagrant-kubernetes/kubernetes-setup/files/persistance/local.s
 
 sudo kubectl create -f vagrant-kubernetes/kubernetes-setup/files/cni/flannel.yaml
 
+# install helm
+sudo curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 
 # use nfs default volume storage
 sudo apt-get install nfs-kernel-server nfs-common portmap -y
@@ -125,8 +127,7 @@ sudo kubectl patch storageclass local-storage -p '{"metadata": {"annotations":{"
 sudo kubectl patch storageclass nfs-client -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 
 
-# install helm
-sudo curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
 
 
 
